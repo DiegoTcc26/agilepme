@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AgilePME</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}
+body{background:#f4f7fb;color:#1f2937}
+.login{min-height:100vh;display:grid;grid-template-columns:1.15fr .85fr}
+.hero{background:linear-gradient(135deg,#0f172a,#1e3a8a 60%,#2563eb);color:#fff;padding:64px;display:flex;align-items:center}
+.hero h1{font-size:42px;margin-bottom:18px}.hero p{font-size:18px;line-height:1.6;color:#dbeafe}
+.panel{display:flex;align-items:center;justify-content:center;padding:48px;background:#fff}
+.card{width:100%;max-width:420px}.card h2{font-size:30px;margin-bottom:8px}.sub{color:#64748b;margin-bottom:28px}
+label{display:block;font-weight:700;font-size:14px;margin:16px 0 8px}
+input{width:100%;padding:14px;border:1px solid #cbd5e1;border-radius:10px}
+button{border:0;cursor:pointer}.primary{width:100%;padding:14px;margin-top:22px;border-radius:10px;background:#2563eb;color:#fff;font-weight:700}
+.hint{margin-top:18px;background:#eff6ff;color:#1e40af;padding:12px;border-radius:10px;font-size:13px;line-height:1.5}
+.app{display:none}.sidebar{position:fixed;top:0;bottom:0;width:250px;background:#0f172a;padding:28px 18px;color:#fff}
+.brand{font-size:24px;font-weight:800;margin-bottom:30px}.nav button{width:100%;text-align:left;padding:12px 14px;margin:5px 0;border-radius:8px;background:transparent;color:#cbd5e1}
+.nav button.active,.nav button:hover{background:#1e293b;color:#fff}
+.main{margin-left:250px;padding:34px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}.muted{color:#64748b}
+.screen{display:none}.screen.active{display:block}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:24px}.metric{background:#fff;padding:20px;border-radius:14px;border:1px solid #e2e8f0}.metric strong{display:block;font-size:30px;margin-top:8px}
+.box{background:#fff;padding:20px;border-radius:14px;border:1px solid #e2e8f0}
+.kanban{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:16px}.col{background:#f8fafc;padding:12px;border-radius:12px;min-height:260px}.task{background:#fff;padding:12px;border-radius:9px;margin-top:10px;border:1px solid #e2e8f0;font-size:13px}
+.sprints{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.sprint{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:20px}.progress{height:10px;background:#e2e8f0;border-radius:20px;margin:14px 0}.bar{height:100%;background:#2563eb;border-radius:20px}
+.logout{position:absolute;left:18px;right:18px;bottom:22px}.logout button{width:100%;padding:11px;border-radius:8px;background:#334155;color:#fff}
+@media(max-width:900px){.login{grid-template-columns:1fr}.hero{display:none}.sidebar{position:static;width:100%}.main{margin-left:0}.cards,.sprints{grid-template-columns:1fr 1fr}.kanban{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<section class="login" id="login">
+  <div class="hero"><div><h1>AgilePME</h1><p>Gestão ágil, simples e visual para pequenas empresas.</p></div></div>
+  <div class="panel">
+    <div class="card">
+      <h2>Entrar no AgilePME</h2><p class="sub">Acesse o ambiente de gestão de projetos.</p>
+      <form id="loginForm">
+        <label>E-mail</label><input id="email" type="email" required>
+        <label>Senha</label><input id="senha" type="password" required>
+        <button class="primary" type="submit">Entrar</button>
+      </form>
+      <div class="hint"><strong>Demonstração</strong><br>E-mail: admin@agilepme.com<br>Senha: 123456</div>
+    </div>
+  </div>
+</section>
+
+<section class="app" id="app">
+<aside class="sidebar">
+  <div class="brand">AgilePME</div>
+  <div class="nav">
+    <button class="active" data-target="dashboard">Dashboard</button>
+    <button data-target="kanban">Quadro Kanban</button>
+    <button data-target="sprints">Sprints</button>
+    <button data-target="relatorios">Relatórios</button>
+  </div>
+  <div class="logout"><button onclick="location.reload()">Sair</button></div>
+</aside>
+<main class="main">
+  <div class="top"><div><h2 id="titulo">Dashboard</h2><p class="muted">Projeto: Sistema Comercial PME</p></div><div>Administrador</div></div>
+
+  <section id="dashboard" class="screen active">
+    <div class="cards">
+      <div class="metric">Projetos ativos<strong>4</strong></div>
+      <div class="metric">Tarefas em aberto<strong>18</strong></div>
+      <div class="metric">Em andamento<strong>7</strong></div>
+      <div class="metric">Concluídas<strong>32</strong></div>
+    </div>
+    <div class="box"><h3>Resumo do projeto</h3><p class="muted" style="margin-top:8px">72% das atividades planejadas foram concluídas.</p></div>
+  </section>
+
+  <section id="kanban" class="screen">
+    <div class="box"><h3>Quadro Kanban</h3><div class="kanban" id="kanbanBoard"></div></div>
+  </section>
+
+  <section id="sprints" class="screen">
+    <div class="sprints">
+      <div class="sprint"><h3>Sprint 01</h3><p>Estrutura inicial</p><div class="progress"><div class="bar" style="width:100%"></div></div><p>100% concluída</p></div>
+      <div class="sprint"><h3>Sprint 02</h3><p>Autenticação e projetos</p><div class="progress"><div class="bar" style="width:85%"></div></div><p>85% concluída</p></div>
+      <div class="sprint"><h3>Sprint 03</h3><p>Kanban e indicadores</p><div class="progress"><div class="bar" style="width:65%"></div></div><p>65% concluída</p></div>
+    </div>
+  </section>
+
+  <section id="relatorios" class="screen">
+    <div class="cards">
+      <div class="metric">Total de tarefas<strong>57</strong></div>
+      <div class="metric">Concluídas<strong>32</strong></div>
+      <div class="metric">Em andamento<strong>7</strong></div>
+      <div class="metric">Taxa de conclusão<strong>72%</strong></div>
+    </div>
+  </section>
+</main>
+</section>
+
+<script>
+const titulos={dashboard:'Dashboard',kanban:'Quadro Kanban',sprints:'Gerenciamento de Sprints',relatorios:'Relatórios'};
+
+document.getElementById('loginForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  const email=document.getElementById('email').value.trim();
+  const senha=document.getElementById('senha').value;
+  if(email==='admin@agilepme.com' && senha==='123456'){
+    document.getElementById('login').style.display='none';
+    document.getElementById('app').style.display='block';
+    carregarKanban();
+  }else{
+    alert('Use admin@agilepme.com e senha 123456');
+  }
+});
+
+document.querySelectorAll('.nav button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    btn.classList.add('active');
+    const id=btn.dataset.target;
+    document.getElementById(id).classList.add('active');
+    document.getElementById('titulo').textContent=titulos[id];
+  });
+});
+
+async function carregarKanban(){
+  const estados=['Backlog','A Fazer','Em Andamento','Em Revisão','Concluído'];
+  let tarefas=[];
+  try{
+    const r=await fetch('/api/tarefas');
+    tarefas=await r.json();
+  }catch(e){}
+
+  const board=document.getElementById('kanbanBoard');
+  board.innerHTML='';
+  estados.forEach(estado=>{
+    const col=document.createElement('div');
+    col.className='col';
+    col.innerHTML='<h4>'+estado.toUpperCase()+'</h4>';
+    tarefas.filter(t=>t.status===estado).forEach(t=>{
+      const card=document.createElement('div');
+      card.className='task';
+      card.textContent=t.titulo+' • '+t.prioridade;
+      col.appendChild(card);
+    });
+    board.appendChild(col);
+  });
+}
+</script>
+</body>
+</html>
